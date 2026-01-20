@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import ProductCard from '../components/products/ProductCard';
-import { products, categories, getProductsByCategory } from '../data/products';
+import { products, getProductsByCategory } from '../data/products';
 import type { Product } from '../types';
+import { useLanguage } from '../context/LanguageContext';
 
 type SortOption = 'featured' | 'price-asc' | 'price-desc' | 'name';
 
 export default function Shop() {
+  const { t } = useLanguage();
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = searchParams.get('category') || 'all';
   
@@ -15,6 +17,14 @@ export default function Shop() {
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>(products);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+
+  const categories = [
+    { id: 'all', name: t('category.all') },
+    { id: 'shirts', name: t('category.shirts') },
+    { id: 'pants', name: t('category.pants') },
+    { id: 'shoes', name: t('category.shoes') },
+    { id: 'accessories', name: t('category.accessories') },
+  ];
 
   useEffect(() => {
     let result = getProductsByCategory(selectedCategory);
@@ -58,7 +68,7 @@ export default function Shop() {
             animate={{ opacity: 1, y: 0 }}
             className="text-4xl md:text-5xl font-bold tracking-tight"
           >
-            Shop
+            {t('shop.title')}
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -66,7 +76,7 @@ export default function Shop() {
             transition={{ delay: 0.1 }}
             className="mt-4 text-lg text-gray-600"
           >
-            {filteredProducts.length} products
+            {filteredProducts.length} {t('shop.products')}
           </motion.p>
         </div>
       </div>
@@ -77,7 +87,7 @@ export default function Shop() {
           <aside className="hidden lg:block w-64 flex-shrink-0">
             <div className="sticky top-24">
               <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
-                Categories
+                {t('shop.categories')}
               </h3>
               <ul className="space-y-2">
                 {categories.map((category) => (
@@ -119,7 +129,7 @@ export default function Shop() {
                     d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
                   />
                 </svg>
-                Filter
+                {t('shop.filter')}
               </button>
 
               <select
@@ -127,10 +137,10 @@ export default function Shop() {
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="text-sm border border-gray-300 px-3 py-2 focus:outline-none focus:border-black"
               >
-                <option value="featured">Featured</option>
-                <option value="price-asc">Price: Low to High</option>
-                <option value="price-desc">Price: High to Low</option>
-                <option value="name">Name</option>
+                <option value="featured">{t('shop.featured')}</option>
+                <option value="price-asc">{t('shop.priceLowHigh')}</option>
+                <option value="price-desc">{t('shop.priceHighLow')}</option>
+                <option value="name">{t('shop.name')}</option>
               </select>
             </div>
 
@@ -141,10 +151,10 @@ export default function Shop() {
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
                 className="text-sm border border-gray-300 px-4 py-2 focus:outline-none focus:border-black"
               >
-                <option value="featured">Sort by: Featured</option>
-                <option value="price-asc">Sort by: Price: Low to High</option>
-                <option value="price-desc">Sort by: Price: High to Low</option>
-                <option value="name">Sort by: Name</option>
+                <option value="featured">{t('shop.sortBy')}: {t('shop.featured')}</option>
+                <option value="price-asc">{t('shop.sortBy')}: {t('shop.priceLowHigh')}</option>
+                <option value="price-desc">{t('shop.sortBy')}: {t('shop.priceHighLow')}</option>
+                <option value="name">{t('shop.sortBy')}: {t('shop.name')}</option>
               </select>
             </div>
 
@@ -159,7 +169,7 @@ export default function Shop() {
 
             {filteredProducts.length === 0 && (
               <div className="text-center py-16">
-                <p className="text-gray-500">No products found in this category.</p>
+                <p className="text-gray-500">{t('shop.noProducts')}</p>
               </div>
             )}
           </div>
@@ -186,7 +196,7 @@ export default function Shop() {
             >
               <div className="p-6">
                 <div className="flex items-center justify-between mb-8">
-                  <h2 className="text-lg font-semibold">Filter</h2>
+                  <h2 className="text-lg font-semibold">{t('shop.filter')}</h2>
                   <button
                     onClick={() => setIsMobileFilterOpen(false)}
                     className="p-2 hover:bg-gray-100 rounded-full"
@@ -208,7 +218,7 @@ export default function Shop() {
                 </div>
 
                 <h3 className="text-sm font-semibold uppercase tracking-wider mb-4">
-                  Categories
+                  {t('shop.categories')}
                 </h3>
                 <ul className="space-y-2">
                   {categories.map((category) => (

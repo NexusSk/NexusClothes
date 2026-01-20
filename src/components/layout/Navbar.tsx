@@ -3,18 +3,20 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
   const { items } = useCart();
   const { user, logout } = useAuth();
+  const { language, setLanguage, t } = useLanguage();
 
   const cartItemCount = items.reduce((sum, item) => sum + item.quantity, 0);
 
   const navLinks = [
-    { path: '/', label: 'Home' },
-    { path: '/shop', label: 'Shop' },
+    { path: '/', label: t('nav.home') },
+    { path: '/shop', label: t('nav.shop') },
   ];
 
   const isActive = (path: string) => location.pathname === path;
@@ -47,15 +49,26 @@ export default function Navbar() {
 
           {/* Right Side - Cart & Auth */}
           <div className="flex items-center space-x-4">
+            {/* Language Switcher */}
+            <button
+              onClick={() => setLanguage(language === 'sk' ? 'en' : 'sk')}
+              className="flex items-center gap-1.5 px-2 py-1 text-sm font-medium text-gray-600 hover:text-black transition-colors border border-gray-200 rounded-md hover:border-gray-400"
+              title={language === 'sk' ? 'Switch to English' : 'Prepnúť na slovenčinu'}
+            >
+              <span className={language === 'sk' ? 'font-bold text-black' : ''}>SK</span>
+              <span className="text-gray-300">/</span>
+              <span className={language === 'en' ? 'font-bold text-black' : ''}>EN</span>
+            </button>
+
             {/* User Menu */}
             {user ? (
               <div className="hidden md:flex items-center space-x-4">
-                <span className="text-sm font-medium text-black">Hey {user.name}!</span>
+                <span className="text-sm font-medium text-black">{t('nav.greeting')} {user.name}!</span>
                 <button
                   onClick={logout}
                   className="text-sm text-gray-500 hover:text-black transition-colors"
                 >
-                  Sign Out
+                  {t('nav.signOut')}
                 </button>
               </div>
             ) : (
@@ -63,7 +76,7 @@ export default function Navbar() {
                 to="/auth"
                 className="hidden md:block text-sm font-medium text-gray-500 hover:text-black transition-colors"
               >
-                Sign In
+                {t('nav.signIn')}
               </Link>
             )}
 
@@ -156,7 +169,7 @@ export default function Navbar() {
               <div className="pt-3 border-t border-gray-100">
                 {user ? (
                   <>
-                    <p className="text-sm font-medium text-black py-2">Hey {user.name}!</p>
+                    <p className="text-sm font-medium text-black py-2">{t('nav.greeting')} {user.name}!</p>
                     <button
                       onClick={() => {
                         logout();
@@ -164,7 +177,7 @@ export default function Navbar() {
                       }}
                       className="block py-2 text-sm text-gray-500"
                     >
-                      Sign Out
+                      {t('nav.signOut')}
                     </button>
                   </>
                 ) : (
@@ -173,7 +186,7 @@ export default function Navbar() {
                     onClick={() => setIsMenuOpen(false)}
                     className="block py-2 text-sm font-medium text-gray-500"
                   >
-                    Sign In
+                    {t('nav.signIn')}
                   </Link>
                 )}
               </div>

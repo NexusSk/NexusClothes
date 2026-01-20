@@ -4,8 +4,11 @@ import { useRef } from 'react';
 import ClothingScene from '../components/three/ClothingScene';
 import FloatingElements from '../components/three/FloatingElements';
 import { products } from '../data/products';
+import { useLanguage } from '../context/LanguageContext';
 
 function HeroSection() {
+  const { t } = useLanguage();
+  
   return (
     <section className="relative h-screen flex items-center justify-center overflow-hidden">
       {/* Background gradient */}
@@ -26,7 +29,7 @@ function HeroSection() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="inline-block text-sm font-medium tracking-[0.3em] text-gray-500 mb-4"
           >
-            INTRODUCING
+            {t('home.introducing')}
           </motion.span>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -42,9 +45,9 @@ function HeroSection() {
             transition={{ duration: 0.8, delay: 0.5 }}
             className="text-lg md:text-xl text-gray-600 max-w-xl mx-auto mb-10 leading-relaxed"
           >
-            Modern essentials for the contemporary wardrobe.
+            {t('home.tagline')}
             <br className="hidden sm:block" />
-            Crafted with precision, designed for life.
+            {t('home.tagline2')}
           </motion.p>
         </motion.div>
         
@@ -58,7 +61,7 @@ function HeroSection() {
             to="/shop"
             className="group inline-flex items-center justify-center px-10 py-4 bg-black text-white font-medium hover:bg-gray-800 transition-all duration-300 hover:scale-105"
           >
-            Shop Collection
+            {t('home.shopCollection')}
             <svg className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
@@ -67,7 +70,7 @@ function HeroSection() {
             href="#about"
             className="inline-flex items-center justify-center px-10 py-4 border-2 border-black text-black font-medium hover:bg-black hover:text-white transition-all duration-300"
           >
-            Discover More
+            {t('home.discoverMore')}
           </a>
         </motion.div>
       </div>
@@ -84,7 +87,7 @@ function HeroSection() {
           transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
           className="flex flex-col items-center gap-2"
         >
-          <span className="text-xs text-gray-400 tracking-widest">SCROLL</span>
+          <span className="text-xs text-gray-400 tracking-widest">{t('home.scroll')}</span>
           <div className="w-6 h-10 border-2 border-gray-300 rounded-full flex justify-center pt-2">
             <motion.div 
               animate={{ y: [0, 12, 0], opacity: [1, 0.3, 1] }}
@@ -99,6 +102,7 @@ function HeroSection() {
 }
 
 function AboutSection() {
+  const { t } = useLanguage();
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -125,26 +129,24 @@ function AboutSection() {
               viewport={{ once: true }}
               className="text-sm font-medium tracking-[0.2em] text-gray-400 mb-4 block"
             >
-              OUR STORY
+              {t('home.ourStory')}
             </motion.span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-6 leading-tight">
-              Designed for
+              {t('home.designedFor')}
               <br />
-              <span className="text-gray-400">Modern Living</span>
+              <span className="text-gray-400">{t('home.modernLiving')}</span>
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-6">
-              At Nexus, we believe in the power of simplicity. Every piece in our collection
-              is thoughtfully designed to blend seamlessly into your everyday life.
+              {t('home.aboutText1')}
             </p>
             <p className="text-lg text-gray-600 leading-relaxed mb-8">
-              We source only the finest materials and partner with ethical manufacturers
-              to create clothing that looks good, feels great, and does right by the planet.
+              {t('home.aboutText2')}
             </p>
             <Link 
               to="/shop"
               className="inline-flex items-center text-sm font-medium tracking-wide hover:underline"
             >
-              EXPLORE COLLECTION
+              {t('home.exploreCollection')}
               <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -177,21 +179,23 @@ function AboutSection() {
 }
 
 function ValuesSection() {
+  const { t } = useLanguage();
+  
   const values = [
     {
       number: '01',
-      title: 'Quality First',
-      description: 'Premium materials and expert craftsmanship in every stitch. We never compromise on quality.',
+      title: t('home.qualityFirst'),
+      description: t('home.qualityDesc'),
     },
     {
       number: '02',
-      title: 'Timeless Design',
-      description: 'Classic silhouettes that transcend seasonal trends. Pieces you\'ll wear for years.',
+      title: t('home.timelessDesign'),
+      description: t('home.timelessDesc'),
     },
     {
       number: '03',
-      title: 'Sustainable Practice',
-      description: 'Ethical production with minimal environmental impact. Fashion that cares.',
+      title: t('home.sustainablePractice'),
+      description: t('home.sustainableDesc'),
     },
   ];
 
@@ -214,17 +218,17 @@ function ValuesSection() {
           className="text-center mb-20"
         >
           <span className="text-sm font-medium tracking-[0.2em] text-gray-500 mb-4 block">
-            WHAT WE STAND FOR
+            {t('home.whatWeStandFor')}
           </span>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-            Our Values
+            {t('home.ourValues')}
           </h2>
         </motion.div>
 
         <div className="grid md:grid-cols-3 gap-8 md:gap-12">
           {values.map((value, index) => (
             <motion.div
-              key={value.title}
+              key={value.number}
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -247,6 +251,7 @@ function ValuesSection() {
 }
 
 function FeaturedProducts() {
+  const { t } = useLanguage();
   const featured = products.slice(0, 4);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -264,17 +269,17 @@ function FeaturedProducts() {
         >
           <div>
             <span className="text-sm font-medium tracking-[0.2em] text-gray-400 mb-4 block">
-              NEW ARRIVALS
+              {t('home.newArrivals')}
             </span>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-              Featured
+              {t('home.featured')}
             </h2>
           </div>
           <Link
             to="/shop"
             className="group inline-flex items-center text-sm font-medium tracking-wide hover:underline"
           >
-            VIEW ALL PRODUCTS
+            {t('home.viewAllProducts')}
             <svg
               className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform"
               fill="none"
@@ -303,7 +308,7 @@ function FeaturedProducts() {
               <Link to={`/product/${product.id}`} className="group block">
                 <div className="aspect-[3/4] bg-gray-100 rounded-2xl mb-4 overflow-hidden relative">
                   <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 group-hover:scale-105 transition-transform duration-500 flex items-center justify-center">
-                    <span className="text-gray-300 text-xs uppercase tracking-wider">Image</span>
+                    <span className="text-gray-300 text-xs uppercase tracking-wider">{t('home.image')}</span>
                   </div>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-300" />
                 </div>
@@ -321,11 +326,13 @@ function FeaturedProducts() {
 }
 
 function StatsSection() {
+  const { t } = useLanguage();
+  
   const stats = [
-    { value: '50K+', label: 'Happy Customers' },
-    { value: '100%', label: 'Sustainable Materials' },
-    { value: '30+', label: 'Countries Shipped' },
-    { value: '5 Star', label: 'Average Rating' },
+    { value: '50K+', label: t('home.happyCustomers') },
+    { value: '100%', label: t('home.sustainableMaterials') },
+    { value: '30+', label: t('home.countriesShipped') },
+    { value: '5 Star', label: t('home.averageRating') },
   ];
 
   return (
@@ -334,7 +341,7 @@ function StatsSection() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((stat, index) => (
             <motion.div
-              key={stat.label}
+              key={stat.value}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -352,6 +359,8 @@ function StatsSection() {
 }
 
 function NewsletterSection() {
+  const { t } = useLanguage();
+  
   return (
     <section className="py-32 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-white" />
@@ -365,14 +374,13 @@ function NewsletterSection() {
           className="max-w-2xl mx-auto text-center"
         >
           <span className="text-sm font-medium tracking-[0.2em] text-gray-400 mb-4 block">
-            JOIN THE COMMUNITY
+            {t('home.joinCommunity')}
           </span>
           <h2 className="text-4xl md:text-5xl font-bold tracking-tight mb-6">
-            Stay Connected
+            {t('home.stayConnected')}
           </h2>
           <p className="text-lg text-gray-600 mb-10">
-            Subscribe to receive updates on new arrivals, special offers,
-            and exclusive content from the Nexus world.
+            {t('home.newsletterText')}
           </p>
           <form
             onSubmit={(e) => {
@@ -383,7 +391,7 @@ function NewsletterSection() {
           >
             <input
               type="email"
-              placeholder="Enter your email"
+              placeholder={t('home.enterEmail')}
               required
               className="flex-1 px-6 py-4 bg-white border border-gray-200 focus:border-black focus:outline-none transition-colors rounded-full"
             />
@@ -391,11 +399,11 @@ function NewsletterSection() {
               type="submit"
               className="px-8 py-4 bg-black text-white font-medium hover:bg-gray-800 transition-colors rounded-full"
             >
-              Subscribe
+              {t('home.subscribe')}
             </button>
           </form>
           <p className="text-xs text-gray-400 mt-4">
-            By subscribing, you agree to our Privacy Policy
+            {t('home.privacyAgreement')}
           </p>
         </motion.div>
       </div>

@@ -1,27 +1,29 @@
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../../context/LanguageContext';
 
 export default function Footer() {
+  const { t } = useLanguage();
   const currentYear = new Date().getFullYear();
 
   const footerLinks = {
     shop: [
-      { label: 'All Products', path: '/shop' },
-      { label: 'Shirts', path: '/shop?category=shirts' },
-      { label: 'Pants', path: '/shop?category=pants' },
-      { label: 'Shoes', path: '/shop?category=shoes' },
-      { label: 'Accessories', path: '/shop?category=accessories' },
+      { label: t('footer.allProducts'), path: '/shop' },
+      { label: t('footer.shirts'), path: '/shop?category=shirts' },
+      { label: t('footer.pants'), path: '/shop?category=pants' },
+      { label: t('footer.shoes'), path: '/shop?category=shoes' },
+      { label: t('footer.accessories'), path: '/shop?category=accessories' },
     ],
     company: [
-      { label: 'About Us', path: '#' },
-      { label: 'Careers', path: '#' },
-      { label: 'Press', path: '#' },
-      { label: 'Sustainability', path: '#' },
+      { label: t('footer.aboutUs'), path: '#' },
+      { label: t('footer.careers'), path: '#' },
+      { label: t('footer.press'), path: '#' },
+      { label: t('footer.sustainability'), path: '#' },
     ],
     support: [
-      { label: 'Contact', path: '#' },
-      { label: 'FAQ', path: '#' },
-      { label: 'Shipping', path: '#' },
-      { label: 'Returns', path: '#' },
+      { label: t('footer.contact'), path: '#' },
+      { label: t('footer.faq'), path: '#' },
+      { label: t('footer.shipping'), path: '#' },
+      { label: t('footer.returns'), path: '#' },
     ],
   };
 
@@ -35,7 +37,7 @@ export default function Footer() {
               <span className="text-2xl font-bold tracking-tight">NEXUS</span>
             </Link>
             <p className="mt-4 text-sm text-gray-500 leading-relaxed">
-              Modern essentials for the contemporary wardrobe. Crafted with care, designed for life.
+              {t('footer.tagline')}
             </p>
             {/* Social Links */}
             <div className="flex space-x-4 mt-6">
@@ -60,11 +62,11 @@ export default function Footer() {
           {/* Shop Links */}
           <div>
             <h3 className="text-sm font-semibold text-black uppercase tracking-wider mb-4">
-              Shop
+              {t('footer.shop')}
             </h3>
             <ul className="space-y-3">
-              {footerLinks.shop.map((link) => (
-                <li key={link.label}>
+              {footerLinks.shop.map((link, index) => (
+                <li key={index}>
                   <Link
                     to={link.path}
                     className="text-sm text-gray-500 hover:text-black transition-colors"
@@ -79,11 +81,11 @@ export default function Footer() {
           {/* Company Links */}
           <div>
             <h3 className="text-sm font-semibold text-black uppercase tracking-wider mb-4">
-              Company
+              {t('footer.company')}
             </h3>
             <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.label}>
+              {footerLinks.company.map((link, index) => (
+                <li key={index}>
                   <Link
                     to={link.path}
                     className="text-sm text-gray-500 hover:text-black transition-colors"
@@ -98,11 +100,11 @@ export default function Footer() {
           {/* Support Links */}
           <div>
             <h3 className="text-sm font-semibold text-black uppercase tracking-wider mb-4">
-              Support
+              {t('footer.support')}
             </h3>
             <ul className="space-y-3">
-              {footerLinks.support.map((link) => (
-                <li key={link.label}>
+              {footerLinks.support.map((link, index) => (
+                <li key={index}>
                   <Link
                     to={link.path}
                     className="text-sm text-gray-500 hover:text-black transition-colors"
@@ -119,14 +121,14 @@ export default function Footer() {
         <div className="mt-12 pt-8 border-t border-gray-200">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-gray-400">
-              &copy; {currentYear} Nexus. All rights reserved.
+              &copy; {currentYear} Nexus. {t('footer.allRightsReserved')}
             </p>
             <div className="flex space-x-6">
               <a href="#" className="text-sm text-gray-400 hover:text-black transition-colors">
-                Privacy Policy
+                {t('footer.privacyPolicy')}
               </a>
               <a href="#" className="text-sm text-gray-400 hover:text-black transition-colors">
-                Terms of Service
+                {t('footer.termsOfService')}
               </a>
             </div>
           </div>

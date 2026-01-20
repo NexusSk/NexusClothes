@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 import type { ShippingInfo, PaymentInfo } from '../types';
 
 type CheckoutStep = 'shipping' | 'payment' | 'confirmation';
 
 export default function Checkout() {
+  const { t } = useLanguage();
   const navigate = useNavigate();
   const { items, getSubtotal, getShipping, getTotal, clearCart } = useCart();
   const [currentStep, setCurrentStep] = useState<CheckoutStep>('shipping');
@@ -37,9 +39,9 @@ export default function Checkout() {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Your cart is empty</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('cart.empty')}</h1>
           <Link to="/shop" className="text-gray-600 hover:underline">
-            Continue shopping
+            {t('cart.continueShopping')}
           </Link>
         </div>
       </div>
@@ -49,14 +51,14 @@ export default function Checkout() {
   const validateShipping = (): boolean => {
     const newErrors: Record<string, string> = {};
     
-    if (!shippingInfo.firstName.trim()) newErrors.firstName = 'First name is required';
-    if (!shippingInfo.lastName.trim()) newErrors.lastName = 'Last name is required';
-    if (!shippingInfo.email.trim()) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(shippingInfo.email)) newErrors.email = 'Invalid email';
-    if (!shippingInfo.address.trim()) newErrors.address = 'Address is required';
-    if (!shippingInfo.city.trim()) newErrors.city = 'City is required';
-    if (!shippingInfo.state.trim()) newErrors.state = 'State is required';
-    if (!shippingInfo.zipCode.trim()) newErrors.zipCode = 'ZIP code is required';
+    if (!shippingInfo.firstName.trim()) newErrors.firstName = t('error.firstNameRequired');
+    if (!shippingInfo.lastName.trim()) newErrors.lastName = t('error.lastNameRequired');
+    if (!shippingInfo.email.trim()) newErrors.email = t('error.emailRequired');
+    else if (!/\S+@\S+\.\S+/.test(shippingInfo.email)) newErrors.email = t('error.invalidEmail');
+    if (!shippingInfo.address.trim()) newErrors.address = t('error.addressRequired');
+    if (!shippingInfo.city.trim()) newErrors.city = t('error.cityRequired');
+    if (!shippingInfo.state.trim()) newErrors.state = t('error.stateRequired');
+    if (!shippingInfo.zipCode.trim()) newErrors.zipCode = t('error.zipRequired');
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -65,14 +67,14 @@ export default function Checkout() {
   const validatePayment = (): boolean => {
     const newErrors: Record<string, string> = {};
     
-    if (!paymentInfo.cardNumber.trim()) newErrors.cardNumber = 'Card number is required';
+    if (!paymentInfo.cardNumber.trim()) newErrors.cardNumber = t('error.cardNumberRequired');
     else if (paymentInfo.cardNumber.replace(/\s/g, '').length !== 16) {
-      newErrors.cardNumber = 'Invalid card number';
+      newErrors.cardNumber = t('error.invalidCardNumber');
     }
-    if (!paymentInfo.cardName.trim()) newErrors.cardName = 'Name on card is required';
-    if (!paymentInfo.expiryDate.trim()) newErrors.expiryDate = 'Expiry date is required';
-    if (!paymentInfo.cvv.trim()) newErrors.cvv = 'CVV is required';
-    else if (paymentInfo.cvv.length < 3) newErrors.cvv = 'Invalid CVV';
+    if (!paymentInfo.cardName.trim()) newErrors.cardName = t('error.cardNameRequired');
+    if (!paymentInfo.expiryDate.trim()) newErrors.expiryDate = t('error.expiryRequired');
+    if (!paymentInfo.cvv.trim()) newErrors.cvv = t('error.cvvRequired');
+    else if (paymentInfo.cvv.length < 3) newErrors.cvv = t('error.invalidCvv');
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -120,9 +122,9 @@ export default function Checkout() {
   };
 
   const steps = [
-    { id: 'shipping', label: 'Shipping' },
-    { id: 'payment', label: 'Payment' },
-    { id: 'confirmation', label: 'Confirmation' },
+    { id: 'shipping', label: t('checkout.shipping') },
+    { id: 'payment', label: t('checkout.payment') },
+    { id: 'confirmation', label: t('checkout.confirmation') },
   ];
 
   const stepIndex = steps.findIndex((s) => s.id === currentStep);
@@ -179,11 +181,11 @@ export default function Checkout() {
               exit={{ opacity: 0, x: -20 }}
               className="bg-white p-8 rounded-lg shadow-sm"
             >
-              <h2 className="text-2xl font-bold mb-6">Shipping Information</h2>
+              <h2 className="text-2xl font-bold mb-6">{t('checkout.shippingInfo')}</h2>
               <form onSubmit={handleShippingSubmit}>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2">First Name</label>
+                    <label className="block text-sm font-medium mb-2">{t('checkout.firstName')}</label>
                     <input
                       type="text"
                       value={shippingInfo.firstName}
@@ -199,7 +201,7 @@ export default function Checkout() {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Last Name</label>
+                    <label className="block text-sm font-medium mb-2">{t('checkout.lastName')}</label>
                     <input
                       type="text"
                       value={shippingInfo.lastName}
@@ -215,7 +217,7 @@ export default function Checkout() {
                     )}
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium mb-2">Email</label>
+                    <label className="block text-sm font-medium mb-2">{t('checkout.email')}</label>
                     <input
                       type="email"
                       value={shippingInfo.email}
@@ -231,7 +233,7 @@ export default function Checkout() {
                     )}
                   </div>
                   <div className="md:col-span-2">
-                    <label className="block text-sm font-medium mb-2">Address</label>
+                    <label className="block text-sm font-medium mb-2">{t('checkout.address')}</label>
                     <input
                       type="text"
                       value={shippingInfo.address}
@@ -247,7 +249,7 @@ export default function Checkout() {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">City</label>
+                    <label className="block text-sm font-medium mb-2">{t('checkout.city')}</label>
                     <input
                       type="text"
                       value={shippingInfo.city}
@@ -264,7 +266,7 @@ export default function Checkout() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">State</label>
+                      <label className="block text-sm font-medium mb-2">{t('checkout.state')}</label>
                       <input
                         type="text"
                         value={shippingInfo.state}
@@ -280,7 +282,7 @@ export default function Checkout() {
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium mb-2">ZIP Code</label>
+                      <label className="block text-sm font-medium mb-2">{t('checkout.zipCode')}</label>
                       <input
                         type="text"
                         value={shippingInfo.zipCode}
@@ -306,13 +308,13 @@ export default function Checkout() {
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
-                    Back to Cart
+                    {t('checkout.backToCart')}
                   </Link>
                   <button
                     type="submit"
                     className="px-8 py-4 bg-black text-white font-medium hover:bg-gray-800 transition-colors"
                   >
-                    Continue to Payment
+                    {t('checkout.continueToPayment')}
                   </button>
                 </div>
               </form>
@@ -328,20 +330,20 @@ export default function Checkout() {
               exit={{ opacity: 0, x: -20 }}
               className="bg-white p-8 rounded-lg shadow-sm"
             >
-              <h2 className="text-2xl font-bold mb-6">Payment Information</h2>
+              <h2 className="text-2xl font-bold mb-6">{t('checkout.paymentInfo')}</h2>
               
               {/* Order Summary */}
               <div className="bg-gray-50 p-4 rounded-lg mb-6">
                 <div className="flex justify-between text-sm mb-2">
-                  <span>Subtotal</span>
+                  <span>{t('cart.subtotal')}</span>
                   <span>${getSubtotal().toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm mb-2">
-                  <span>Shipping</span>
-                  <span>{getShipping() === 0 ? 'Free' : `$${getShipping().toFixed(2)}`}</span>
+                  <span>{t('cart.shipping')}</span>
+                  <span>{getShipping() === 0 ? t('cart.free') : `$${getShipping().toFixed(2)}`}</span>
                 </div>
                 <div className="flex justify-between font-semibold pt-2 border-t border-gray-200">
-                  <span>Total</span>
+                  <span>{t('cart.total')}</span>
                   <span>${getTotal().toFixed(2)}</span>
                 </div>
               </div>
@@ -349,7 +351,7 @@ export default function Checkout() {
               <form onSubmit={handlePaymentSubmit}>
                 <div className="space-y-6">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Card Number</label>
+                    <label className="block text-sm font-medium mb-2">{t('checkout.cardNumber')}</label>
                     <input
                       type="text"
                       value={paymentInfo.cardNumber}
@@ -370,7 +372,7 @@ export default function Checkout() {
                     )}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Name on Card</label>
+                    <label className="block text-sm font-medium mb-2">{t('checkout.nameOnCard')}</label>
                     <input
                       type="text"
                       value={paymentInfo.cardName}
@@ -387,7 +389,7 @@ export default function Checkout() {
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium mb-2">Expiry Date</label>
+                      <label className="block text-sm font-medium mb-2">{t('checkout.expiryDate')}</label>
                       <input
                         type="text"
                         value={paymentInfo.expiryDate}
@@ -432,7 +434,7 @@ export default function Checkout() {
                 </div>
 
                 <p className="text-xs text-gray-500 mt-4">
-                  This is a demo checkout. No real payment will be processed.
+                  {t('checkout.demoNote')}
                 </p>
 
                 <div className="mt-8 flex justify-between items-center">
@@ -444,7 +446,7 @@ export default function Checkout() {
                     <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
                     </svg>
-                    Back to Shipping
+                    {t('checkout.backToShipping')}
                   </button>
                   <button
                     type="submit"
@@ -472,10 +474,10 @@ export default function Checkout() {
                             d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                           />
                         </svg>
-                        Processing...
+                        {t('checkout.processing')}
                       </>
                     ) : (
-                      `Pay $${getTotal().toFixed(2)}`
+                      `${t('checkout.pay')} $${getTotal().toFixed(2)}`
                     )}
                   </button>
                 </div>
@@ -496,29 +498,29 @@ export default function Checkout() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
               </div>
-              <h2 className="text-2xl font-bold mb-2">Order Confirmed!</h2>
+              <h2 className="text-2xl font-bold mb-2">{t('checkout.orderConfirmed')}</h2>
               <p className="text-gray-600 mb-6">
-                Thank you for your purchase. Your order has been placed successfully.
+                {t('checkout.thankYou')}
               </p>
               <div className="bg-gray-50 p-4 rounded-lg inline-block mb-8">
-                <p className="text-sm text-gray-500">Order Number</p>
+                <p className="text-sm text-gray-500">{t('checkout.orderNumber')}</p>
                 <p className="text-xl font-bold">{orderNumber}</p>
               </div>
               <p className="text-sm text-gray-500 mb-8">
-                A confirmation email has been sent to {shippingInfo.email}
+                {t('checkout.confirmationEmail')} {shippingInfo.email}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   to="/shop"
                   className="px-8 py-4 bg-black text-white font-medium hover:bg-gray-800 transition-colors"
                 >
-                  Continue Shopping
+                  {t('cart.continueShopping')}
                 </Link>
                 <button
                   onClick={() => navigate('/')}
                   className="px-8 py-4 border border-gray-300 font-medium hover:border-black transition-colors"
                 >
-                  Back to Home
+                  {t('auth.backToHome')}
                 </button>
               </div>
             </motion.div>

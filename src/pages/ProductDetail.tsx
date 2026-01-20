@@ -4,8 +4,10 @@ import { motion } from 'framer-motion';
 import { getProductById, products } from '../data/products';
 import { useCart } from '../context/CartContext';
 import ProductCard from '../components/products/ProductCard';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ProductDetail() {
+  const { t } = useLanguage();
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { addItem } = useCart();
@@ -20,9 +22,9 @@ export default function ProductDetail() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Product not found</h1>
+          <h1 className="text-2xl font-bold mb-4">{t('product.notFound')}</h1>
           <Link to="/shop" className="text-gray-600 hover:underline">
-            Back to shop
+            {t('product.backToShop')}
           </Link>
         </div>
       </div>
@@ -35,7 +37,7 @@ export default function ProductDetail() {
 
   const handleAddToCart = () => {
     if (!selectedSize) {
-      alert('Please select a size');
+      alert(t('product.selectSize'));
       return;
     }
     addItem(product, selectedSize, quantity);
@@ -45,7 +47,7 @@ export default function ProductDetail() {
 
   const handleBuyNow = () => {
     if (!selectedSize) {
-      alert('Please select a size');
+      alert(t('product.selectSize'));
       return;
     }
     addItem(product, selectedSize, quantity);
@@ -57,12 +59,12 @@ export default function ProductDetail() {
       {/* Breadcrumb */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <nav className="flex items-center gap-2 text-sm text-gray-500">
-          <Link to="/" className="hover:text-black">Home</Link>
+          <Link to="/" className="hover:text-black">{t('nav.home')}</Link>
           <span>/</span>
-          <Link to="/shop" className="hover:text-black">Shop</Link>
+          <Link to="/shop" className="hover:text-black">{t('nav.shop')}</Link>
           <span>/</span>
           <Link to={`/shop?category=${product.category}`} className="hover:text-black capitalize">
-            {product.category}
+            {t(`category.${product.category}`)}
           </Link>
           <span>/</span>
           <span className="text-black">{product.name}</span>
@@ -130,9 +132,9 @@ export default function ProductDetail() {
             {/* Size Selector */}
             <div className="mb-8">
               <div className="flex items-center justify-between mb-3">
-                <label className="text-sm font-medium">Size</label>
+                <label className="text-sm font-medium">{t('product.size')}</label>
                 <button className="text-sm text-gray-500 hover:text-black underline">
-                  Size Guide
+                  {t('product.sizeGuide')}
                 </button>
               </div>
               <div className="flex flex-wrap gap-3">
@@ -154,7 +156,7 @@ export default function ProductDetail() {
 
             {/* Quantity */}
             <div className="mb-8">
-              <label className="text-sm font-medium block mb-3">Quantity</label>
+              <label className="text-sm font-medium block mb-3">{t('product.quantity')}</label>
               <div className="flex items-center border border-gray-300 w-fit">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
@@ -189,17 +191,17 @@ export default function ProductDetail() {
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                     </svg>
-                    Added to Cart
+                    {t('product.addedToCart')}
                   </span>
                 ) : (
-                  'Add to Cart'
+                  t('product.addToCart')
                 )}
               </button>
               <button
                 onClick={handleBuyNow}
                 className="flex-1 py-4 px-8 bg-black text-white font-medium hover:bg-gray-800 transition-colors"
               >
-                Buy Now
+                {t('product.buyNow')}
               </button>
             </div>
 
@@ -210,8 +212,8 @@ export default function ProductDetail() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4" />
                 </svg>
                 <div>
-                  <p className="text-sm font-medium">Free Shipping</p>
-                  <p className="text-sm text-gray-500">On orders over $150</p>
+                  <p className="text-sm font-medium">{t('product.freeShipping')}</p>
+                  <p className="text-sm text-gray-500">{t('product.freeShippingNote')}</p>
                 </div>
               </div>
               <div className="flex items-start gap-3">
@@ -219,8 +221,8 @@ export default function ProductDetail() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                 </svg>
                 <div>
-                  <p className="text-sm font-medium">Easy Returns</p>
-                  <p className="text-sm text-gray-500">30-day return policy</p>
+                  <p className="text-sm font-medium">{t('product.easyReturns')}</p>
+                  <p className="text-sm text-gray-500">{t('product.returnPolicy')}</p>
                 </div>
               </div>
             </div>
@@ -233,7 +235,7 @@ export default function ProductDetail() {
         <div className="bg-gray-50 py-16 mt-16">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-bold tracking-tight mb-8">
-              You May Also Like
+              {t('product.youMayAlsoLike')}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {relatedProducts.map((relatedProduct, index) => (
