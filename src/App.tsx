@@ -13,7 +13,7 @@ function App() {
   return (
     <AuthProvider>
       <CartProvider>
-        <BrowserRouter>
+        <BrowserRouter basename="/NexusClothes">
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<Home />} />
