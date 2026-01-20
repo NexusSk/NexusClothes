@@ -1,7 +1,8 @@
-import { useRef, useMemo } from 'react';
+import { useRef, useMemo, useState, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float } from '@react-three/drei';
 import * as THREE from 'three';
+import { ErrorBoundary } from '../ErrorBoundary';
 
 function FloatingCube({ position, scale = 1, speed = 1, color = '#e5e5e5' }: {
   position: [number, number, number];
@@ -118,16 +119,40 @@ function SubtleScene() {
   );
 }
 
+function isWebGLAvailable() {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+    );
+  } catch {
+    return false;
+  }
+}
+
 export default function FloatingElements({ className = '' }: { className?: string }) {
+  const [canRender, setCanRender] = useState(false);
+
+  useEffect(() => {
+    setCanRender(isWebGLAvailable());
+  }, []);
+
+  if (!canRender) {
+    return null;
+  }
+
   return (
     <div className={`absolute inset-0 -z-10 opacity-60 ${className}`}>
-      <Canvas
-        camera={{ position: [0, 0, 5], fov: 50 }}
-        dpr={[1, 1.5]}
-        gl={{ antialias: true, alpha: true }}
-      >
-        <SubtleScene />
-      </Canvas>
+      <ErrorBoundary fallback={null}>
+        <Canvas
+          camera={{ position: [0, 0, 5], fov: 50 }}
+          dpr={[1, 1.5]}
+          gl={{ antialias: true, alpha: true }}
+        >
+          <SubtleScene />
+        </Canvas>
+      </ErrorBoundary>
     </div>
   );
 }

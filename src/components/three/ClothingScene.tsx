@@ -1,7 +1,8 @@
-import { useRef, useMemo, Suspense } from 'react';
+import { useRef, useMemo, Suspense, useState, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, Sphere, Box, Torus, Environment, MeshWobbleMaterial } from '@react-three/drei';
 import * as THREE from 'three';
+import { ErrorBoundary } from '../ErrorBoundary';
 
 function FloatingShape({ 
   position, 
@@ -242,19 +243,49 @@ function Scene() {
   );
 }
 
+function isWebGLAvailable() {
+  try {
+    const canvas = document.createElement('canvas');
+    return !!(
+      window.WebGLRenderingContext &&
+      (canvas.getContext('webgl') || canvas.getContext('experimental-webgl'))
+    );
+  } catch {
+    return false;
+  }
+}
+
+function WebGLCanvas() {
+  return (
+    <Canvas
+      camera={{ position: [0, 0, 8], fov: 50 }}
+      dpr={[1, 2]}
+      gl={{ antialias: true, alpha: true }}
+      style={{ background: 'transparent' }}
+    >
+      <Suspense fallback={null}>
+        <Scene />
+      </Suspense>
+    </Canvas>
+  );
+}
+
 export default function ClothingScene() {
+  const [canRender, setCanRender] = useState(false);
+
+  useEffect(() => {
+    setCanRender(isWebGLAvailable());
+  }, []);
+
+  if (!canRender) {
+    return null;
+  }
+
   return (
     <div className="absolute inset-0" style={{ zIndex: 0 }}>
-      <Canvas
-        camera={{ position: [0, 0, 8], fov: 50 }}
-        dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true }}
-        style={{ background: 'transparent' }}
-      >
-        <Suspense fallback={null}>
-          <Scene />
-        </Suspense>
-      </Canvas>
+      <ErrorBoundary fallback={null}>
+        <WebGLCanvas />
+      </ErrorBoundary>
     </div>
   );
 }
